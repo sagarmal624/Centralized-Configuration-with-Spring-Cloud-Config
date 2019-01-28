@@ -1,5 +1,5 @@
 # Centralized-Configuration-with-Spring-Cloud-Config
-https://www.sagarandcompany.com/
+
 
                                                 # Centralized configuration with Spring Cloud Config
                                                 
