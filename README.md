@@ -56,7 +56,9 @@ http://localhost:8181/refresh   with post request
 http://localhost:8282/refresh   with post request
 
 
+TO broadcast:  Kindly refer this url
 
+https://springbootdev.com/2018/07/17/spring-cloud-config-refreshing-the-config-changes-with-spring-cloud-bus-part-2/
 
 
                                                 
