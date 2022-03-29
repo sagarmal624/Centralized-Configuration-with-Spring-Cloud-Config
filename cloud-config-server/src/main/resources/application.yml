@@ -1,0 +1,14 @@
+management:
+  security:
+    enabled: 'false'
+server:
+  port: '8888'
+spring:
+  cloud:
+    config:
+      label: develop
+      server:
+        git:
+#          uri: https://github.com/sagarmal624/config-repo.git
+          search-paths:
+            - 'epe-common/{profile}'
