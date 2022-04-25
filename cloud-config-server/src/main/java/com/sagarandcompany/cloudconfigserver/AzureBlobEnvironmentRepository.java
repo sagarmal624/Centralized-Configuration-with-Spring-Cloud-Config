@@ -1,16 +1,13 @@
 package com.sagarandcompany.cloudconfigserver;
 
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.cloud.config.environment.Environment;
 import org.springframework.cloud.config.environment.PropertySource;
 import org.springframework.cloud.config.server.config.ConfigServerProperties;
 import org.springframework.cloud.config.server.environment.EnvironmentRepository;
-import org.springframework.cloud.config.server.environment.NoSuchRepositoryException;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -25,13 +22,13 @@ import static org.springframework.beans.factory.config.YamlProcessor.MatchStatus
 @Component
 public class AzureBlobEnvironmentRepository implements EnvironmentRepository, Ordered {
 
-    private AzureBlobAdapter azureBlobAdapter;
+    private AzureFileShareAdapter azureFileShareAdapter;
 
     private final ConfigServerProperties serverProperties;
     protected int order = Ordered.LOWEST_PRECEDENCE;
 
-    public AzureBlobEnvironmentRepository(AzureBlobAdapter azureBlobAdapter, ConfigServerProperties server) {
-        this.azureBlobAdapter = azureBlobAdapter;
+    public AzureBlobEnvironmentRepository(AzureFileShareAdapter azureFileShareAdapter, ConfigServerProperties server) {
+        this.azureFileShareAdapter = azureFileShareAdapter;
         this.serverProperties = server;
     }
 
@@ -73,15 +70,15 @@ public class AzureBlobEnvironmentRepository implements EnvironmentRepository, Or
             File file = null;
             try {
                 if (FilenameUtils.getExtension(key).equals("properties")) {
-                    file = this.azureBlobAdapter.getFile(key);
+                    file = this.azureFileShareAdapter.getFile(key);
                     if (Objects.nonNull(file)) {
                         Map config = read(new FileInputStream(file));
                         config.putAll(this.serverProperties.getOverrides());
                         return new PropertySource(key, config);
                     }
-                } else if (FilenameUtils.getExtension(key).equals("yml")) {
+                } else if (FilenameUtils.getExtension(key).equals("yml") || FilenameUtils.getExtension(key).equals("yaml")) {
 
-                    file = this.azureBlobAdapter.getFile(key);
+                    file = this.azureFileShareAdapter.getFile(key);
                     if (Objects.nonNull(file)) {
                         final YamlPropertiesFactoryBean yamlFactory = new YamlPropertiesFactoryBean();
                         yamlFactory.setDocumentMatchers(properties -> {
